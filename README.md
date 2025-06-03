@@ -1,101 +1,54 @@
-# time in zone
+# ⏱️ time in zone
 
-[![YouTube](https://badges.aleen42.com/src/youtube.svg)](https://www.youtube.com/watch?v=hAWpsIuem10)
+Demonstração prática sobre como utilizar visão computacional para **analisar tempos de espera** e monitorizar **a duração que objetos ou pessoas passam em zonas pré-definidas** de vídeos.  
+Este projeto de exemplo é ideal para aplicações como **análise de comportamento em lojas**.
 
-## 👋 hello
+---
 
-Practical demonstration on leveraging computer vision for analyzing wait times and
-monitoring the duration that objects or individuals spend in predefined areas of video
-frames. This example project, perfect for retail analytics or traffic management
-applications.
+## 💻 Instalação
 
-https://github.com/roboflow/supervision/assets/26109316/d051cc8a-dd15-41d4-aa36-d38b86334c39
+1. Clone o repositório e navegue até ao diretório do exemplo:
 
-## 💻 install
+   ```bash
+   git clone --depth 1 -b develop https://github.com/DiogoAzevedo03/Object-time-in-zone.git
+   cd supervision/examples/time_in_zone
+   ```
 
-- clone repository and navigate to example directory
+2. Crie e ative um ambiente virtual Python *(opcional, mas recomendado)*:
 
-    ```bash
-    git clone --depth 1 -b develop https://github.com/roboflow/supervision.git
-    cd supervision/examples/time_in_zone
-    ```
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate
+   ```
 
-- setup python environment and activate it \[optional\]
+3. Instale as dependências necessárias:
 
-    ```bash
-    python3 -m venv venv
-    source venv/bin/activate
-    ```
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-- install required dependencies
+---
 
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-## 🛠 scripts
-
-### `download_from_youtube`
-
-This script allows you to download a video from YouTube.
-
-- `--url`: The full URL of the YouTube video you wish to download.
-- `--output_path` (optional): Specifies the directory where the video will be saved.
-- `--file_name` (optional): Sets the name of the saved video file.
-
-```bash
-python scripts/download_from_youtube.py \
-    --url "https://www.youtube.com/watch?v=-8zyEwAa50Q" \
-    --output_path "data/checkout" \
-    --file_name "video.mp4"
-```
-
-```bash
-python scripts/download_from_youtube.py \
-    --url "https://www.youtube.com/watch?v=MNn9qKG2UFI" \
-    --output_path "data/traffic" \
-    --file_name "video.mp4"
-```
-
-### `stream_from_file`
-
-This script allows you to stream video files from a directory. It's an awesome way to
-mock a live video stream for local testing. Video will be streamed in a loop under
-`rtsp://localhost:8554/live0.stream` URL. This script requires docker to be installed.
-
-- `--video_directory`: Directory containing video files to stream.
-- `--number_of_streams`: Number of video files to stream.
-
-```bash
-python scripts/stream_from_file.py \
-    --video_directory "data/checkout" \
-    --number_of_streams 1
-```
-
-```bash
-python scripts/stream_from_file.py \
-    --video_directory "data/traffic" \
-    --number_of_streams 1
-```
+## 🛠 Scripts
 
 ### `draw_zones`
 
-If you want to test zone time in zone analysis on your own video, you can use this
-script to design custom zones and save results as a JSON file. The script will open a
-window where you can draw polygons on the source image or video file. The polygons will
-be saved as a JSON file.
+Se quiser testar a análise de tempo em zonas com o seu próprio vídeo, pode utilizar este script para **desenhar zonas personalizadas** e guardar os resultados num ficheiro `.json`.  
+Uma janela será aberta para permitir desenhar polígonos sobre uma imagem ou vídeo. Esses polígonos serão guardados como ficheiro de configuração.
 
-- `--source_path`: Path to the source image or video file for drawing polygons.
+Parâmetros:
 
-- `--zone_configuration_path`: Path where the polygon annotations will be saved as a JSON file.
+- `--source_path`: Caminho para o vídeo ou imagem onde pretende desenhar os polígonos.
+- `--zone_configuration_path`: Caminho onde será guardado o ficheiro JSON com os polígonos desenhados.
 
-- `enter` - finish drawing the current polygon.
+Atalhos no teclado:
 
-- `escape` - cancel drawing the current polygon.
+- `enter` → Finaliza o polígono atual.
+- `escape` → Cancela o polígono atual.
+- `q` → Fecha a janela.
+- `s` → Guarda o ficheiro de configuração das zonas.
 
-- `q` - quit the drawing window.
-
-- `s` - save zone configuration to a JSON file.
+Exemplos de uso:
 
 ```bash
 python scripts/draw_zones.py \
@@ -103,26 +56,24 @@ python scripts/draw_zones.py \
     --zone_configuration_path "data/checkout/config.json"
 ```
 
-```bash
-python scripts/draw_zones.py \
-    --source_path "data/traffic/video.mp4" \
-    --zone_configuration_path "data/traffic/config.json"
-```
+---
 
-https://github.com/roboflow/supervision/assets/26109316/9d514c9e-2a61-418b-ae49-6ac1ad6ae5ac
-
-## 🎬 video & stream processing
+## 🎬 Processamento de Vídeo e Streams
 
 ### `inference_file_example`
 
-Script to run object detection on a video file using the Roboflow Inference model.
+Este script executa **detecção de objetos num vídeo** utilizando um modelo Roboflow Inference.
 
-- `--zone_configuration_path`: Path to the zone configuration JSON file.
-- `--source_video_path`: Path to the source video file.
-- `--model_id`: Roboflow model ID.
-- `--classes`: List of class IDs to track. If empty, all classes are tracked.
-- `--confidence_threshold`: Confidence level for detections (`0` to `1`). Default is `0.3`.
-- `--iou_threshold`: IOU threshold for non-max suppression. Default is `0.7`.
+Parâmetros:
+
+- `--zone_configuration_path`: Caminho para o ficheiro `.json` com as zonas.
+- `--source_video_path`: Caminho para o ficheiro de vídeo.
+- `--model_id`: ID do modelo da Roboflow.
+- `--classes`: Lista de IDs de classes a seguir (se deixar vazio, segue todas).
+- `--confidence_threshold`: Confiança mínima para aceitar detecções (de `0` a `1`). Padrão: `0.3`.
+- `--iou_threshold`: IOU mínimo para supressão de detecções sobrepostas. Padrão: `0.7`.
+
+Exemplo (análise de caixa de supermercado):
 
 ```bash
 python inference_file_example.py \
@@ -134,134 +85,49 @@ python inference_file_example.py \
     --iou_threshold 0.7
 ```
 
-https://github.com/roboflow/supervision/assets/26109316/d051cc8a-dd15-41d4-aa36-d38b86334c39
+---
 
-```bash
-python inference_file_example.py \
-    --zone_configuration_path "data/traffic/config.json" \
-    --source_video_path "data/traffic/video.mp4" \
-    --model_id "yolov8x-640" \
-    --classes 2 5 6 7 \
-    --confidence_threshold 0.3 \
-    --iou_threshold 0.7
-```
+## 📦 Funcionalidades Implementadas
 
-https://github.com/roboflow/supervision/assets/26109316/5ec896d7-4b39-4426-8979-11e71666878b
+- Contagem do tempo que cada ID permanece em cada zona.
+- Agrupamento dos tempos por ID (vários registos do mesmo ID são somados).
+- Suporte a múltiplas zonas.
 
-### `inference_stream_example`
+---
 
-Script to run object detection on a video stream using the Roboflow Inference model.
+## ✅ Resultados
 
-- `--zone_configuration_path`: Path to the zone configuration JSON file.
-- `--rtsp_url`: Complete RTSP URL for the video stream.
-- `--model_id`: Roboflow model ID.
-- `--classes`: List of class IDs to track. If empty, all classes are tracked.
-- `--confidence_threshold`: Confidence level for detections (`0` to `1`). Default is `0.3`.
-- `--iou_threshold`: IOU threshold for non-max suppression. Default is `0.7`.
+O sistema demonstrou ser eficaz para:
 
-```bash
-python inference_stream_example.py \
-    --zone_configuration_path "data/checkout/config.json" \
-    --rtsp_url "rtsp://localhost:8554/live0.stream" \
-    --model_id "yolov8x-640" \
-    --classes 0 \
-    --confidence_threshold 0.3 \
-    --iou_threshold 0.7
-```
+- Detetar e seguir objetos em tempo real com YOLOv8.
+- Calcular com precisão o tempo passado em zonas específicas.
+- Visualizar facilmente o tracking com a biblioteca Supervision.
 
-```bash
-python inference_stream_example.py \
-    --zone_configuration_path "data/traffic/config.json" \
-    --rtsp_url "rtsp://localhost:8554/live0.stream" \
-    --model_id "yolov8x-640" \
-    --classes 2 5 6 7 \
-    --confidence_threshold 0.3 \
-    --iou_threshold 0.7
-```
+Pode ser usado em contextos como:
 
-<details>
-<summary>👉 show ultralytics examples</summary>
+- Monitorização de filas em lojas.
+- Análise de permanência em zonas de interesse.
 
-### `ultralytics_file_example`
+---
 
-Script to run object detection on a video file using the Ultralytics YOLOv8 model.
+## 🔮 Melhorias Futuras
 
-- `--zone_configuration_path`: Path to the zone configuration JSON file.
-- `--source_video_path`: Path to the source video file.
-- `--weights`: Path to the model weights file. Default is `'yolov8s.pt'`.
-- `--device`: Computation device (`'cpu'`, `'mps'` or `'cuda'`). Default is `'cpu'`.
-- `--classes`: List of class IDs to track. If empty, all classes are tracked.
-- `--confidence_threshold`: Confidence level for detections (`0` to `1`). Default is `0.3`.
-- `--iou_threshold`: IOU threshold for non-max suppression. Default is `0.7`.
+- 📤 Exportar os tempos por ID e zona para ficheiros CSV ou base de dados.  
+- 🧠 Suportar múltiplas classes (ex: pessoas, carros, etc.).  
+- 🌐 Criar uma interface web para visualização ao vivo dos dados.  
+- 🚨 Implementar alertas em tempo real quando um objeto excede um tempo limite numa zona.
 
-```bash
-python ultralytics_file_example.py \
-    --zone_configuration_path "data/checkout/config.json" \
-    --source_video_path "data/checkout/video.mp4" \
-    --weights "yolov8x.pt" \
-    --device "cpu" \
-    --classes 0 \
-    --confidence_threshold 0.3 \
-    --iou_threshold 0.7
-```
+---
 
-```bash
-python ultralytics_file_example.py \
-    --zone_configuration_path "data/traffic/config.json" \
-    --source_video_path "data/traffic/video.mp4" \
-    --weights "yolov8x.pt" \
-    --device "cpu" \
-    --classes 2 5 6 7 \
-    --confidence_threshold 0.3 \
-    --iou_threshold 0.7
-```
+## 🔗 GitHub
 
-### `ultralytics_stream_example`
+Repositório do projeto:  
+👉 [https://github.com/DiogoAzevedo03/Object-time-in-zone](https://github.com/DiogoAzevedo03/Object-time-in-zone)
 
-Script to run object detection on a video stream using the Ultralytics YOLOv8 model.
+---
 
-- `--zone_configuration_path`: Path to the zone configuration JSON file.
-- `--rtsp_url`: Complete RTSP URL for the video stream.
-- `--weights`: Path to the model weights file. Default is `'yolov8s.pt'`.
-- `--device`: Computation device (`'cpu'`, `'mps'` or `'cuda'`). Default is `'cpu'`.
-- `--classes`: List of class IDs to track. If empty, all classes are tracked.
-- `--confidence_threshold`: Confidence level for detections (`0` to `1`). Default is `0.3`.
-- `--iou_threshold`: IOU threshold for non-max suppression. Default is `0.7`.
+## 📚 Referências
 
-```bash
-python ultralytics_stream_example.py \
-    --zone_configuration_path "data/checkout/config.json" \
-    --rtsp_url "rtsp://localhost:8554/live0.stream" \
-    --weights "yolov8x.pt" \
-    --device "cpu" \
-    --classes 0 \
-    --confidence_threshold 0.3 \
-    --iou_threshold 0.7
-```
-
-```bash
-python ultralytics_stream_example.py \
-    --zone_configuration_path "data/traffic/config.json" \
-    --rtsp_url "rtsp://localhost:8554/live0.stream" \
-    --weights "yolov8x.pt" \
-    --device "cpu" \
-    --classes 2 5 6 7 \
-    --confidence_threshold 0.3 \
-    --iou_threshold 0.7
-```
-
-</details>
-
-## © license
-
-This demo integrates two main components, each with its own licensing:
-
-- ultralytics: The object detection model used in this demo, YOLOv8, is distributed
-    under the [AGPL-3.0 license](https://github.com/ultralytics/ultralytics/blob/main/LICENSE).
-    You can find more details about this license here.
-
-- supervision: The analytics code that powers the zone-based analysis in this demo is
-    based on the Supervision library, which is licensed under the
-    [MIT license](https://github.com/roboflow/supervision/blob/develop/LICENSE.md). This
-    makes the Supervision part of the code fully open source and freely usable in your
-    projects.
+- [Ultralytics YOLOv8 Docs](https://docs.ultralytics.com)
+- [Supervision Docs (Roboflow)](https://github.com/roboflow/supervision)
+- [OpenCV Documentation](https://docs.opencv.org)
