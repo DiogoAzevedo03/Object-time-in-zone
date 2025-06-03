@@ -11,7 +11,6 @@ Este projeto de exemplo é ideal para aplicações como **análise de comportame
 
    ```bash
    git clone --depth 1 -b develop https://github.com/DiogoAzevedo03/Object-time-in-zone.git
-   cd supervision/examples/time_in_zone
    ```
 
 2. Crie e ative um ambiente virtual Python *(opcional, mas recomendado)*:
